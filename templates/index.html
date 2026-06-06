@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +8,11 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
         body {
             font-family: 'Inter', sans-serif;
@@ -22,7 +27,7 @@
             border: 1px solid #e2e8f0;
             padding: 40px;
             border-radius: 16px;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.07);
             max-width: 1050px;
             margin: 0 auto;
         }
@@ -50,7 +55,8 @@
             letter-spacing: 0.04em;
         }
 
-        select, input[type="number"] {
+        select,
+        input[type="number"] {
             width: 100%;
             padding: 10px 13px;
             background: #f8fafc;
@@ -63,7 +69,8 @@
             font-family: 'Inter', sans-serif;
         }
 
-        select:focus, input[type="number"]:focus {
+        select:focus,
+        input[type="number"]:focus {
             border-color: #3b82f6;
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
             background: #ffffff;
@@ -136,8 +143,14 @@
             font-size: 0.93rem;
         }
 
-        .error strong { color: #dc2626; }
-        .error ul { margin-top: 6px; padding-left: 18px; }
+        .error strong {
+            color: #dc2626;
+        }
+
+        .error ul {
+            margin-top: 6px;
+            padding-left: 18px;
+        }
 
         .section-title {
             background: #eff6ff;
@@ -160,24 +173,30 @@
         }
 
         @media (max-width: 600px) {
-            .container { padding: 24px 16px; }
-            h1 { font-size: 1.5rem; }
+            .container {
+                padding: 24px 16px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1>Cancer Risk Prediction System</h1>
 
         {% if errors %}
-            <div class="error">
-                <strong>Please correct the following errors:</strong>
-                <ul>
-                    {% for error in errors %}
-                        <li>{{ error }}</li>
-                    {% endfor %}
-                </ul>
-            </div>
+        <div class="error">
+            <strong>Please correct the following errors:</strong>
+            <ul>
+                {% for error in errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
         {% endif %}
 
         <form method="POST" action="/predict">
@@ -190,23 +209,25 @@
                         <label for="Gender">Gender</label>
                         <select name="Gender" id="Gender" required>
                             <option value="">Select Gender</option>
-                            <option value="Male" {% if input_data and input_data.Gender == 'Male' %}selected{% endif %}>Male</option>
-                            <option value="Female" {% if input_data and input_data.Gender == 'Female' %}selected{% endif %}>Female</option>
+                            <option value="Male" {% if input_data and input_data.Gender=='Male' %}selected{% endif %}>
+                                Male</option>
+                            <option value="Female" {% if input_data and input_data.Gender=='Female' %}selected{% endif
+                                %}>Female</option>
                         </select>
                     </div>
 
                     <div class="form-group">
                         <label for="Age_Years">Age (Years)</label>
                         <input type="number" name="Age_Years" id="Age_Years" min="10" max="100"
-                               placeholder="Enter age in years (10-100)"
-                               value="{% if input_data %}{{ input_data.Age_Years }}{% endif %}" required>
+                            placeholder="Enter age in years (10-100)"
+                            value="{% if input_data %}{{ input_data.Age_Years }}{% endif %}" required>
                     </div>
 
                     <div class="form-group">
                         <label for="BMI_Value">BMI Value</label>
                         <input type="number" name="BMI_Value" id="BMI_Value" min="15" max="40" step="0.1"
-                               placeholder="Enter BMI (15-40)"
-                               value="{% if input_data %}{{ input_data.BMI_Value }}{% endif %}" required>
+                            placeholder="Enter BMI (15-40)"
+                            value="{% if input_data %}{{ input_data.BMI_Value }}{% endif %}" required>
                     </div>
                 </div>
 
@@ -218,9 +239,12 @@
                         <label for="Smoking_Status">Smoking Status</label>
                         <select name="Smoking_Status" id="Smoking_Status" required>
                             <option value="">Select Smoking Status</option>
-                            <option value="Never" {% if input_data and input_data.Smoking_Status == 'Never' %}selected{% endif %}>Never</option>
-                            <option value="Former" {% if input_data and input_data.Smoking_Status == 'Former' %}selected{% endif %}>Former</option>
-                            <option value="Current" {% if input_data and input_data.Smoking_Status == 'Current' %}selected{% endif %}>Current</option>
+                            <option value="Never" {% if input_data and input_data.Smoking_Status=='Never' %}selected{%
+                                endif %}>Never</option>
+                            <option value="Former" {% if input_data and input_data.Smoking_Status=='Former' %}selected{%
+                                endif %}>Former</option>
+                            <option value="Current" {% if input_data and input_data.Smoking_Status=='Current'
+                                %}selected{% endif %}>Current</option>
                         </select>
                     </div>
 
@@ -228,10 +252,14 @@
                         <label for="Smoking_Intensity">Smoking Intensity</label>
                         <select name="Smoking_Intensity" id="Smoking_Intensity" required>
                             <option value="">Select Intensity</option>
-                            <option value="None" {% if input_data and input_data.Smoking_Intensity == 'None' %}selected{% endif %}>None</option>
-                            <option value="Light" {% if input_data and input_data.Smoking_Intensity == 'Light' %}selected{% endif %}>Light</option>
-                            <option value="Moderate" {% if input_data and input_data.Smoking_Intensity == 'Moderate' %}selected{% endif %}>Moderate</option>
-                            <option value="Heavy" {% if input_data and input_data.Smoking_Intensity == 'Heavy' %}selected{% endif %}>Heavy</option>
+                            <option value="None" {% if input_data and input_data.Smoking_Intensity=='None' %}selected{%
+                                endif %}>None</option>
+                            <option value="Light" {% if input_data and input_data.Smoking_Intensity=='Light'
+                                %}selected{% endif %}>Light</option>
+                            <option value="Moderate" {% if input_data and input_data.Smoking_Intensity=='Moderate'
+                                %}selected{% endif %}>Moderate</option>
+                            <option value="Heavy" {% if input_data and input_data.Smoking_Intensity=='Heavy'
+                                %}selected{% endif %}>Heavy</option>
                         </select>
                     </div>
 
@@ -239,32 +267,36 @@
                         <label for="Smoking_Frequency">Smoking Frequency</label>
                         <select name="Smoking_Frequency" id="Smoking_Frequency" required>
                             <option value="">Select Frequency</option>
-                            <option value="None" {% if input_data and input_data.Smoking_Frequency == 'None' %}selected{% endif %}>None</option>
-                            <option value="Occasional" {% if input_data and input_data.Smoking_Frequency == 'Occasional' %}selected{% endif %}>Occasional</option>
-                            <option value="Daily" {% if input_data and input_data.Smoking_Frequency == 'Daily' %}selected{% endif %}>Daily</option>
-                            <option value="Chain Smoker" {% if input_data and input_data.Smoking_Frequency == 'Chain Smoker' %}selected{% endif %}>Chain Smoker</option>
+                            <option value="None" {% if input_data and input_data.Smoking_Frequency=='None' %}selected{%
+                                endif %}>None</option>
+                            <option value="Occasional" {% if input_data and input_data.Smoking_Frequency=='Occasional'
+                                %}selected{% endif %}>Occasional</option>
+                            <option value="Daily" {% if input_data and input_data.Smoking_Frequency=='Daily'
+                                %}selected{% endif %}>Daily</option>
+                            <option value="Chain Smoker" {% if input_data and
+                                input_data.Smoking_Frequency=='Chain Smoker' %}selected{% endif %}>Chain Smoker</option>
                         </select>
                     </div>
 
                     <div class="form-group">
                         <label for="Years_Smoked">Years Smoked</label>
                         <input type="number" name="Years_Smoked" id="Years_Smoked" min="0" max="40"
-                               placeholder="Enter years (0-40)"
-                               value="{% if input_data %}{{ input_data.Years_Smoked }}{% endif %}" required>
+                            placeholder="Enter years (0-40)"
+                            value="{% if input_data %}{{ input_data.Years_Smoked }}{% endif %}" required>
                     </div>
 
                     <div class="form-group">
                         <label for="Cigarettes_Per_Day">Cigarettes Per Day</label>
                         <input type="number" name="Cigarettes_Per_Day" id="Cigarettes_Per_Day" min="0" max="40"
-                               placeholder="Enter cigarettes (0-40)"
-                               value="{% if input_data %}{{ input_data.Cigarettes_Per_Day }}{% endif %}" required>
+                            placeholder="Enter cigarettes (0-40)"
+                            value="{% if input_data %}{{ input_data.Cigarettes_Per_Day }}{% endif %}" required>
                     </div>
 
                     <div class="form-group">
                         <label for="Smoking_Risk">Smoking Risk Score</label>
-                        <input type="number" name="Smoking_Risk" id="Smoking_Risk" min="0" step="0.1"
-                               placeholder="Calculated automatically"
-                               value="{% if input_data %}{{ input_data.Smoking_Risk }}{% endif %}" required>
+                        <input type="number" name="Smoking_Risk" id="Smoking_Risk" min="0" step="0.01"
+                            placeholder="Calculated automatically"
+                            value="{% if input_data %}{{ input_data.Smoking_Risk }}{% endif %}" required>
                     </div>
                 </div>
             </div>
@@ -277,22 +309,23 @@
                     <div class="form-group">
                         <label for="PM25_Level">PM2.5 Level (μg/m³)</label>
                         <input type="number" name="PM25_Level" id="PM25_Level" min="10" max="300" step="0.1"
-                               placeholder="Enter PM2.5 (10-300 μg/m³)"
-                               value="{% if input_data %}{{ input_data.PM25_Level }}{% endif %}" required>
+                            placeholder="Enter PM2.5 (10-300 μg/m³)"
+                            value="{% if input_data %}{{ input_data.PM25_Level }}{% endif %}" required>
                     </div>
 
                     <div class="form-group">
                         <label for="Radon_Level_Bq">Radon Level (Bq/m³)</label>
                         <input type="number" name="Radon_Level_Bq" id="Radon_Level_Bq" min="0" max="150" step="0.1"
-                               placeholder="Enter radon (10-150 Bq/m³)"
-                               value="{% if input_data %}{{ input_data.Radon_Level_Bq|default('') }}{% endif %}" required>
+                            placeholder="Enter radon (10-150 Bq/m³)"
+                            value="{% if input_data %}{{ input_data.Radon_Level_Bq|default('') }}{% endif %}" required>
                     </div>
 
                     <div class="form-group">
                         <label for="Asbestos_Exposure_Index">Asbestos Exposure Index</label>
-                        <input type="number" name="Asbestos_Exposure_Index" id="Asbestos_Exposure_Index" min="0" max="150" step="0.1"
-                               placeholder="Enter asbestos index (10-150)"
-                               value="{% if input_data %}{{ input_data.Asbestos_Exposure_Index|default('') }}{% endif %}" required>
+                        <input type="number" name="Asbestos_Exposure_Index" id="Asbestos_Exposure_Index" min="0"
+                            max="150" step="0.1" placeholder="Enter asbestos index (10-150)"
+                            value="{% if input_data %}{{ input_data.Asbestos_Exposure_Index|default('') }}{% endif %}"
+                            required>
                     </div>
                 </div>
 
@@ -302,22 +335,22 @@
 
                     <div class="form-group">
                         <label for="Oxygen_Percentage">Oxygen Percentage (%)</label>
-                        <input type="number" name="Oxygen_Percentage" id="Oxygen_Percentage" min="80" max="100" step="0.1"
-                               placeholder="Enter oxygen % (80-100%)"
-                               value="{% if input_data %}{{ input_data.Oxygen_Percentage }}{% endif %}" required>
+                        <input type="number" name="Oxygen_Percentage" id="Oxygen_Percentage" min="80" max="100"
+                            step="0.1" placeholder="Enter oxygen % (80-100%)"
+                            value="{% if input_data %}{{ input_data.Oxygen_Percentage }}{% endif %}" required>
                     </div>
 
                     <div class="form-group">
                         <label>Has Cough</label>
                         <div class="binary-group">
                             <div class="binary-option">
-                                <input type="radio" name="Has_Cough" id="Has_Cough_0" value="0"
-                                       {% if input_data and input_data.Has_Cough == 0 %}checked{% endif %} required>
+                                <input type="radio" name="Has_Cough" id="Has_Cough_0" value="0" {% if input_data and
+                                    input_data.Has_Cough==0 %}checked{% endif %} required>
                                 <label for="Has_Cough_0">No</label>
                             </div>
                             <div class="binary-option">
-                                <input type="radio" name="Has_Cough" id="Has_Cough_1" value="1"
-                                       {% if input_data and input_data.Has_Cough == 1 %}checked{% endif %} required>
+                                <input type="radio" name="Has_Cough" id="Has_Cough_1" value="1" {% if input_data and
+                                    input_data.Has_Cough==1 %}checked{% endif %} required>
                                 <label for="Has_Cough_1">Yes</label>
                             </div>
                         </div>
@@ -327,11 +360,16 @@
                         <label for="Coughing">Coughing Severity</label>
                         <select name="Coughing" id="Coughing" required>
                             <option value="">Select Coughing Severity</option>
-                            <option value="None" {% if input_data and input_data.Coughing == 'None' %}selected{% endif %}>None</option>
-                            <option value="Mild" {% if input_data and input_data.Coughing == 'Mild' %}selected{% endif %}>Mild</option>
-                            <option value="Moderate" {% if input_data and input_data.Coughing == 'Moderate' %}selected{% endif %}>Moderate</option>
-                            <option value="High" {% if input_data and input_data.Coughing == 'High' %}selected{% endif %}>High</option>
-                            <option value="Severe" {% if input_data and input_data.Coughing == 'Severe' %}selected{% endif %}>Severe</option>
+                            <option value="None" {% if input_data and input_data.Coughing=='None' %}selected{% endif %}>
+                                None</option>
+                            <option value="Mild" {% if input_data and input_data.Coughing=='Mild' %}selected{% endif %}>
+                                Mild</option>
+                            <option value="Moderate" {% if input_data and input_data.Coughing=='Moderate' %}selected{%
+                                endif %}>Moderate</option>
+                            <option value="High" {% if input_data and input_data.Coughing=='High' %}selected{% endif %}>
+                                High</option>
+                            <option value="Severe" {% if input_data and input_data.Coughing=='Severe' %}selected{% endif
+                                %}>Severe</option>
                         </select>
                     </div>
 
@@ -339,13 +377,13 @@
                         <label>Has Breathlessness</label>
                         <div class="binary-group">
                             <div class="binary-option">
-                                <input type="radio" name="Has_Breathlessness" id="Has_Breathlessness_0" value="0"
-                                       {% if input_data and input_data.Has_Breathlessness == 0 %}checked{% endif %} required>
+                                <input type="radio" name="Has_Breathlessness" id="Has_Breathlessness_0" value="0" {% if
+                                    input_data and input_data.Has_Breathlessness==0 %}checked{% endif %} required>
                                 <label for="Has_Breathlessness_0">No</label>
                             </div>
                             <div class="binary-option">
-                                <input type="radio" name="Has_Breathlessness" id="Has_Breathlessness_1" value="1"
-                                       {% if input_data and input_data.Has_Breathlessness == 1 %}checked{% endif %} required>
+                                <input type="radio" name="Has_Breathlessness" id="Has_Breathlessness_1" value="1" {% if
+                                    input_data and input_data.Has_Breathlessness==1 %}checked{% endif %} required>
                                 <label for="Has_Breathlessness_1">Yes</label>
                             </div>
                         </div>
@@ -355,11 +393,16 @@
                         <label for="Breathlessness">Breathlessness Severity</label>
                         <select name="Breathlessness" id="Breathlessness" required>
                             <option value="">Select Breathlessness Severity</option>
-                            <option value="None" {% if input_data and input_data.Breathlessness == 'None' %}selected{% endif %}>None</option>
-                            <option value="Mild" {% if input_data and input_data.Breathlessness == 'Mild' %}selected{% endif %}>Mild</option>
-                            <option value="Moderate" {% if input_data and input_data.Breathlessness == 'Moderate' %}selected{% endif %}>Moderate</option>
-                            <option value="High" {% if input_data and input_data.Breathlessness == 'High' %}selected{% endif %}>High</option>
-                            <option value="Severe" {% if input_data and input_data.Breathlessness == 'Severe' %}selected{% endif %}>Severe</option>
+                            <option value="None" {% if input_data and input_data.Breathlessness=='None' %}selected{%
+                                endif %}>None</option>
+                            <option value="Mild" {% if input_data and input_data.Breathlessness=='Mild' %}selected{%
+                                endif %}>Mild</option>
+                            <option value="Moderate" {% if input_data and input_data.Breathlessness=='Moderate'
+                                %}selected{% endif %}>Moderate</option>
+                            <option value="High" {% if input_data and input_data.Breathlessness=='High' %}selected{%
+                                endif %}>High</option>
+                            <option value="Severe" {% if input_data and input_data.Breathlessness=='Severe' %}selected{%
+                                endif %}>Severe</option>
                         </select>
                     </div>
                 </div>
@@ -391,4 +434,5 @@
         });
     </script>
 </body>
+
 </html>
