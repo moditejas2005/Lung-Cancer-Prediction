@@ -1,13 +1,42 @@
 # Deployment Guide: PythonAnywhere & GitHub
 
-This guide covers how to deploy the Lung Cancer Prediction application on PythonAnywhere since your code is already pushed to GitHub.
+This guide covers how to push your local code to your new GitHub account and then deploy the application on PythonAnywhere.
 
 ---
 
-## Part 1: Your GitHub Repository
+## Part 1: Pushing Code to GitHub
 
-Your code has already been successfully pushed to GitHub!
-You can view your repository here: [https://github.com/Adityadubbewar-oss/Lung-Cancer-Prediction](https://github.com/Adityadubbewar-oss/Lung-Cancer-Prediction)
+Since you have a new GitHub account (`moditejas2005`), you'll need to manually create the repository first. 
+
+GitHub no longer accepts account passwords for pushing code via the command line. You must use a **Personal Access Token (PAT)**. 
+
+### Step 1: Create a Personal Access Token
+1. Log into GitHub and go to **Settings** (click your profile picture in the top right).
+2. Scroll to the bottom of the left sidebar and click **Developer settings**.
+3. Click **Personal access tokens** -> **Tokens (classic)**.
+4. Click **Generate new token** -> **Generate new token (classic)**.
+5. In the "Note" field, type something like "PythonAnywhere Deployment".
+6. Under "Select scopes", check the box next to **repo** (this gives it permission to push code).
+7. Scroll down and click **Generate token**.
+8. **IMPORTANT:** Copy the token that appears on the next screen (it starts with `ghp_`). You will not be able to see it again!
+
+### Step 2: Create the Repository on GitHub
+1. Go to your GitHub homepage and click the **New** button to create a new repository.
+2. Name the repository `Lung-Cancer-Prediction`.
+3. Do NOT check any boxes to initialize it with a README, .gitignore, or license. Leave it completely empty.
+4. Click **Create repository**.
+
+### Step 3: Push Your Code
+Now that your repository is created, open your command prompt or terminal, make sure you are in your project folder (`c:\Users\hp\Desktop\Cancer\Lung_Cancer_Prediction`), and run these exact commands one by one:
+
+```bash
+git remote add origin https://github.com/moditejas2005/Lung-Cancer-Prediction.git
+git branch -M main
+git push -u origin main
+```
+*(When prompted for your password, paste the Personal Access Token (PAT) you generated in Step 1!)*
+
+Once this is successful, your code is on GitHub! You can now move on to Part 2.
 
 ---
 
@@ -24,9 +53,9 @@ You can view your repository here: [https://github.com/Adityadubbewar-oss/Lung-C
 ### Step 3: Clone Your Repository
 In the Bash console, run the following command to download your code from GitHub:
 ```bash
-git clone https://github.com/Adityadubbewar-oss/Lung-Cancer-Prediction.git
+git clone https://github.com/moditejas2005/Lung-Cancer-Prediction.git
 ```
-*(You will be asked for your username and password. For the password, use your GitHub Personal Access Token (PAT) that you previously used.)*
+*(For the password, use your GitHub Personal Access Token (PAT) that you generated in Part 1.)*
 
 ### Step 4: Create a Virtual Environment
 1. Still in the Bash console, navigate to your new project directory:
@@ -41,7 +70,7 @@ git clone https://github.com/Adityadubbewar-oss/Lung-Cancer-Prediction.git
    ```bash
    pip install -r requirements.txt
    ```
-*(Note: If you run into issues with numpy/pandas versions, run `pip install "numpy<2.0" --force-reinstall`)*
+*(Note: If you run into issues with numpy/pandas versions during deployment, you can run `pip install "numpy<2.0" --force-reinstall`)*
 
 ### Step 5: Set Up the Web App
 1. Click the **Web** tab in the PythonAnywhere header.
@@ -53,7 +82,7 @@ git clone https://github.com/Adityadubbewar-oss/Lung-Cancer-Prediction.git
 
 ### Step 6: Configure the WSGI File
 1. On your newly created Web app page, scroll down to the **Code** section.
-2. In the **Source code** box, enter: `/home/YOUR_PYTHONANYWHERE_USERNAME/Lung-Cancer-Prediction` and click the checkmark to save it. (Replace `YOUR_PYTHONANYWHERE_USERNAME` with your actual PythonAnywhere username, usually it's `Aditya2004` based on your previous deployment).
+2. In the **Source code** box, enter: `/home/YOUR_PYTHONANYWHERE_USERNAME/Lung-Cancer-Prediction` and click the checkmark to save it. (Replace `YOUR_PYTHONANYWHERE_USERNAME` with your actual PythonAnywhere username).
 3. Click on the link next to **WSGI configuration file** (it ends in `_wsgi.py`).
 4. Delete EVERYTHING in that file and replace it with:
 
