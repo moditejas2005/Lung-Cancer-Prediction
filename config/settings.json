@@ -1,0 +1,30 @@
+{
+  "project_name": "Enterprise Synthetic Medical AI Platform",
+  "random_seed": 42,
+  "paths": {
+    "raw_dir": "data/raw",
+    "processed_dir": "data/processed",
+    "synthetic_dir": "data/synthetic",
+    "validated_dir": "data/validated",
+    "reports_dir": "data/reports",
+    "models_dir": "models",
+    "logs_dir": "logs"
+  },
+  "ctgan": {
+    "epochs": 15,
+    "batch_size": 500,
+    "generator_dim": [256, 256],
+    "discriminator_dim": [256, 256],
+    "verbose": true
+  },
+  "generation": {
+    "base_patients": 5000,
+    "synthetic_patients": 50000
+  },
+  "training": {
+    "n_splits": 5,
+    "target_recall": 0.95,
+    "optuna_trials": 20,
+    "use_gpu": true
+  }
+}
