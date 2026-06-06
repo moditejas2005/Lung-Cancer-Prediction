@@ -66,11 +66,14 @@ git clone https://github.com/moditejas2005/Lung-Cancer-Prediction.git
    ```bash
    mkvirtualenv --python=/usr/bin/python3.10 myenv
    ```
-3. Install the required dependencies:
+3. **IMPORTANT - Clear your cache first** to free up space (to avoid the Disk Quota error):
    ```bash
-   pip install -r requirements.txt
+   rm -rf ~/.cache/pip
    ```
-*(Note: If you run into issues with numpy/pandas versions during deployment, you can run `pip install "numpy<2.0" --force-reinstall`)*
+4. Install only the lightweight deployment dependencies (no heavy training packages like PyTorch):
+   ```bash
+   pip install --no-cache-dir -r requirements_deploy.txt
+   ```
 
 ### Step 5: Set Up the Web App
 1. Click the **Web** tab in the PythonAnywhere header.
