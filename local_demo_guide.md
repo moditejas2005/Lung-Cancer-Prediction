@@ -47,32 +47,61 @@ You should see `(venv)` appear at the start of your prompt line — this means t
 
 ## Step 3 — Install Dependencies
 
-With `(venv)` active, run:
+Depending on whether you just want to run the web app demo or run the entire pipeline from scratch, choose **one** of these options:
 
+### Option A: Web App Demo Only (Fastest & Lightweight)
+If you only need to run the web interface (using pre-trained models already in the `models/` folder):
 ```cmd
 pip install flask pandas numpy scikit-learn xgboost catboost scipy joblib
 ```
 
-> **Note:** This installs only what's needed to run the web app.  
-> The full training pipeline (CTGAN, Optuna, SHAP) is **not required** for the demo — the pre-trained model is already saved in the `models/` folder.
+### Option B: Full Training Pipeline (Run Everything From Scratch)
+If you want to reinstall and run the entire data generation and model training pipeline from the very beginning:
+```cmd
+pip install -r requirements.txt
+```
+*(This will install CTGAN, PyTorch, Optuna, SHAP, and all other advanced modeling packages).*
 
 ---
 
-## Step 4 — Run the Application
+## Step 4 — Run the Project
 
+Choose the command below depending on what you want to show:
+
+### 🌐 Option A: Launch the Web App
+To run the pre-trained clinical web application interface:
 ```cmd
 python app.py
 ```
+* Go to **http://127.0.0.1:5000** in your browser.
 
-You will see output like:
-```
- * Serving Flask app 'app'
- * Debug mode: off
- * Running on http://127.0.0.1:5000
+---
+
+### ⚙️ Option B: Run the Full Pipeline From Scratch
+If you want to demonstrate how you generated the dataset and trained the models from scratch, run the `pipeline_runner.py` script. 
+
+To run it **quickly** for a live demo (takes ~2 minutes):
+```cmd
+python pipeline_runner.py --test-mode
 ```
 
-Open your browser and go to:  
-👉 **http://127.0.0.1:5000** or **http://localhost:5000**
+To run a **full production run** (takes ~30-45 minutes depending on GPU):
+```cmd
+python pipeline_runner.py
+```
+
+#### What `pipeline_runner.py` does automatically:
+1. **Generates Base Data:** Simulates raw medical patient distributions.
+2. **Cleans Data:** Cleans, formats, and handles missing details.
+3. **Feature Engineering:** Computes medical index features (BMI, Smoking Risk, etc.).
+4. **CTGAN Data Augmentation:** Trains a Conditional Generative Adversarial Network to generate synthetic records.
+5. **Data Validation:** Checks data drift (PSI) and runs statistical and medical safety tests on synthetic data.
+6. **Ensemble Model Training:** Trains XGBoost, CatBoost, Random Forest, etc.
+7. **Hyperparameter Tuning:** Uses Optuna to find the best model configuration.
+8. **Calibration:** Calibrates model probabilities (Isotonic Scaling).
+9. **Threshold Optimization:** Balances precision and recall to set the safest classification cutoff.
+10. **Explainability:** Calculates global and local explanations via SHAP.
+11. **Report Generation:** Outputs Excel evaluation sheets and plots inside the `data/reports/` folder.
 
 ---
 
@@ -101,7 +130,7 @@ Lung_Cancer_Prediction/
 ├── app.py                  ← Flask web server (main entry point)
 ├── inference.py            ← Model loading & prediction logic
 ├── validators.py           ← Clinical input validation rules
-├── pipeline_runner.py      ← Full training pipeline (not needed for demo)
+├── pipeline_runner.py      ← Full training pipeline (runs everything from scratch)
 │
 ├── models/                 ← Pre-trained model files (.joblib)
 ├── templates/              ← HTML pages for the web interface
