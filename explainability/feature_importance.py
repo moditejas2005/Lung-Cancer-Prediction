@@ -1,3 +1,23 @@
+"""
+feature_importance.py - Feature Importance Comparison Module
+=============================================================
+This module compares how different ML models rank the importance of each
+patient feature. Each model has its own way of measuring "importance":
+
+  - XGBoost / Random Forest / GradientBoosting: "Feature Importance" attribute
+    → How much did each feature reduce impurity across all tree splits?
+    → Higher = more useful to the model
+
+  - Logistic Regression: "Coefficients"
+    → How much does each feature change the log-odds of cancer?
+    → Higher absolute value = stronger influence
+
+By comparing importance across models, we can:
+  1. Identify which features ALL models agree are important (robust features)
+  2. Detect features that only one model relies on (potentially overfitting)
+  3. Remove features that no model finds important (reduce noise)
+"""
+
 import pandas as pd
 import numpy as np
 import logging

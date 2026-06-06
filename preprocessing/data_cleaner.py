@@ -1,3 +1,25 @@
+"""
+data_cleaner.py - Dataset Generator & Cleaner
+===============================================
+This module has two jobs:
+
+  1. generate_base_dataset():
+     Creates a realistic fake patient dataset from scratch using statistical rules.
+     It simulates things like:
+       - Demographics (age, gender)
+       - Smoking history (status, intensity, pack-years)
+       - Environmental exposure (PM2.5, radon, asbestos)
+       - Physiological measurements (BMI, oxygen saturation, heart rate)
+       - Symptoms (cough, breathlessness, chest pain)
+       - Cancer diagnosis (using a logistic risk formula based on all the above)
+
+  2. clean_dataset():
+     Takes the raw generated (or CTGAN synthetic) data and cleans it:
+       - Splits "120/80" blood pressure strings into two numeric columns
+       - Fills any missing values with median/mode
+       - Standardizes column data types
+"""
+
 import numpy as np
 import pandas as pd
 import os
@@ -8,18 +30,28 @@ logger = logging.getLogger("DataCleaner")
 
 def generate_base_dataset(n_samples=5000, seed=42):
     """
-    Generates a medically realistic base patient dataset.
+    Creates a realistic synthetic patient dataset from scratch using statistical rules.
+    This is the "seed" data that the CTGAN model will learn from.
+
+    Args:
+        n_samples : Number of patient records to generate (default 5000)
+        seed      : Random seed for reproducibility (default 42)
+
+    Returns:
+        df: A pandas DataFrame with one row per patient and all medical features + Diagnosis label
     """
     logger.info(f"Generating base medical dataset with {n_samples} records (Seed: {seed})...")
-    np.random.seed(seed)
+    np.random.seed(seed)  # Fix random seed so results are the same every run
     
-    # 1. Basic demographics
-    age = np.random.randint(18, 90, size=n_samples)
-    gender = np.random.choice(["Male", "Female"], size=n_samples, p=[0.48, 0.52])
+    # ── 1. Demographics ──
+    age = np.random.randint(18, 90, size=n_samples)   # Ages 18-90 uniformly distributed
+    gender = np.random.choice(["Male", "Female"], size=n_samples, p=[0.48, 0.52])  # Slight female majority
     
-    # 2. Smoking profiles
+    # ── 2. Smoking Profiles ──
+    # 50% never smokers, 30% former smokers, 20% current smokers (realistic population ratios)
     smoking_status = np.random.choice(["Never", "Former", "Current"], size=n_samples, p=[0.50, 0.30, 0.20])
     
+    # Initialize all smoking values to 0/"None" (they'll be filled for smokers below)
     smoking_intensity = np.zeros(n_samples, dtype=int)
     smoking_frequency = np.array(["None"] * n_samples, dtype=object)
     years_smoked = np.zeros(n_samples, dtype=int)
@@ -27,34 +59,45 @@ def generate_base_dataset(n_samples=5000, seed=42):
     
     for i in range(n_samples):
         if smoking_status[i] == "Never":
-            continue
+            continue  # Leave all values at 0 — never-smokers have no smoking history
         elif smoking_status[i] == "Former":
-            smoking_intensity[i] = np.random.randint(1, 6)
+            # Former smokers: lighter smoking history
+            smoking_intensity[i] = np.random.randint(1, 6)   # Intensity 1-5
             smoking_frequency[i] = np.random.choice(["Occasional", "Regular"], p=[0.4, 0.6])
-            # Years smoked cannot exceed (Age - 15)
+            # Years smoked cannot exceed (Age - 15) — you can't smoke before ~age 15
             max_years = max(1, age[i] - 15)
             years_smoked[i] = np.random.randint(1, max_years + 1)
-            cigarettes_per_day[i] = np.random.randint(2, 20)
-        else: # Current
-            smoking_intensity[i] = np.random.randint(3, 11)
+            cigarettes_per_day[i] = np.random.randint(2, 20)  # 2-20 cigarettes/day
+        else:  # Current smoker — heavier smoking history
+            smoking_intensity[i] = np.random.randint(3, 11)   # Intensity 3-10 (heavier)
             smoking_frequency[i] = "Regular"
             max_years = max(1, age[i] - 15)
             years_smoked[i] = np.random.randint(3, max_years + 1)
-            cigarettes_per_day[i] = np.random.randint(5, 41)
+            cigarettes_per_day[i] = np.random.randint(5, 41)  # 5-40 cigarettes/day
             
+    # Pack-Years = (Cigarettes per day / 20) × Years smoked
+    # This is a standard medical measure of cumulative smoking exposure
     pack_years = (cigarettes_per_day / 20.0) * years_smoked
     
-    # 3. Environmental exposure
-    pm25 = np.random.uniform(5.0, 120.0, size=n_samples)
-    radon = np.random.uniform(0.1, 15.0, size=n_samples)
-    asbestos = np.random.choice([0, 1], size=n_samples, p=[0.92, 0.08])
+    # ── 3. Environmental Exposure ──
+    pm25 = np.random.uniform(5.0, 120.0, size=n_samples)                    # PM2.5 air pollution (μg/m³)
+    radon = np.random.uniform(0.1, 15.0, size=n_samples)                    # Radon gas (Becquerels)
+    asbestos = np.random.choice([0, 1], size=n_samples, p=[0.92, 0.08])     # 8% of population exposed to asbestos
     
-    # 4. Physiological traits
+    # ── 4. Body Mass Index (BMI) ──
+    # Normal distribution centered at 26.5 (slightly overweight average)
     bmi = np.random.normal(26.5, 5.0, size=n_samples)
-    bmi = np.clip(bmi, 15.0, 45.0)
+    bmi = np.clip(bmi, 15.0, 45.0)  # Clip to realistic range (underweight to severely obese)
     
-    # 5. Non-linear Cancer Risk Formula for Diagnosis
-    # High age, high pack years, high radon, high asbestos, high pm25, and low/high BMI increase risk
+    # ── 5. Cancer Risk Formula (Logistic Regression) ──
+    # This is a sigmoid function that converts a risk score to a probability.
+    # Each factor adds to the logit (log-odds) of having cancer:
+    #   - Older age → higher risk
+    #   - More pack-years → higher risk
+    #   - Higher PM2.5 → higher risk
+    #   - Higher radon → higher risk
+    #   - Asbestos exposure → much higher risk (coefficient 2.2 is very strong)
+    #   - Obese BMI (>30) → slightly higher risk
     logit = (
         -5.0 
         + 0.035 * age 

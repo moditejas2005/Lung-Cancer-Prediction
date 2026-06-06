@@ -1,3 +1,25 @@
+"""
+feature_engineering.py - Feature Creation & Selection
+=======================================================
+Raw data often doesn't contain the best features for a model.
+This module creates NEW derived features and selects the most predictive ones.
+
+  engineer_features():
+    Creates interaction terms and composite clinical indexes from raw data.
+    Examples:
+      - "Smoking_Damage_Index" = Pack_Years × (Years_Smoked + 1) — total smoking damage
+      - "Pulmonary_Stress_Index" = HeartRate × (Breathlessness + Wheezing + 1) / O2
+      - "Environmental_Exposure_Index" = PM2.5 + Radon + Asbestos combined score
+    These engineered features often give the model much better signal than raw numbers.
+
+  perform_feature_selection():
+    Removes redundant and uninformative features to reduce noise and speed up training.
+    Uses three methods combined:
+      1. Correlation Filtering — drops one of any two highly correlated features (>0.95)
+      2. Mutual Information Score — ranks features by how much they share with the target
+      3. Random Forest Importance — ranks features by how much they improve tree splits
+"""
+
 import numpy as np
 import pandas as pd
 import logging

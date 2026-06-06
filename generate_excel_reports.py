@@ -255,7 +255,7 @@ def generate_model_metrics_report(model_metrics, fitted_models, X_val_scaled, y_
     _cw(ws, [25, 15, 15, 10])
     
     # ── Plots Generation for the remaining sheets ───────────
-    plot_dir = "synthetic_medical_ai/data/reports/plots"
+    plot_dir = "data/reports/plots"
     os.makedirs(plot_dir, exist_ok=True)
     
     # Heatmap
@@ -412,7 +412,7 @@ def generate_model_metrics_report(model_metrics, fitted_models, X_val_scaled, y_
             row_offset += 25
             
     # ── Sheet: Optimized_CM ────────────────────────────────
-    opt_cm_path = "synthetic_medical_ai/data/reports/plots/confusion_matrix.png"
+    opt_cm_path = "data/reports/plots/confusion_matrix.png"
     if os.path.exists(opt_cm_path):
         ws = wb.create_sheet("Optimized_CM")
         ws.cell(1, 1, "Optimized Clinical Confusion Matrix (Calibrated Stacking)").font = TITLE_FONT
@@ -420,10 +420,10 @@ def generate_model_metrics_report(model_metrics, fitted_models, X_val_scaled, y_
         
     # Save ModelMetrics.xlsx
     try:
-        wb.save("synthetic_medical_ai/data/reports/ModelMetrics.xlsx")
+        wb.save("data/reports/ModelMetrics.xlsx")
         logger.info("Successfully saved ModelMetrics.xlsx!")
     except PermissionError:
-        alt_path = "synthetic_medical_ai/data/reports/ModelMetrics_new.xlsx"
+        alt_path = "data/reports/ModelMetrics_new.xlsx"
         logger.warning(f"Permission denied to write ModelMetrics.xlsx (locked by another process). Saving to {alt_path} instead.")
         wb.save(alt_path)
 
@@ -432,11 +432,11 @@ def generate_model_metrics_report(model_metrics, fitted_models, X_val_scaled, y_
 # ================================================================
 def generate_combined_evaluation_report(df_cleaned, test_mode=False, fitted_models=None, model_metrics=None, X_val_scaled=None, y_val=None):
     logger.info("Executing Two-Phase ML Pipeline (VIF vs PCA)...")
-    plot_dir = "synthetic_medical_ai/data/reports/plots"
+    plot_dir = "data/reports/plots"
     os.makedirs(plot_dir, exist_ok=True)
     
     # Engineer features and clean
-    from synthetic_medical_ai.preprocessing.feature_engineering import engineer_features
+    from preprocessing.feature_engineering import engineer_features
     df_feat = engineer_features(df_cleaned)
     
     X = df_feat.drop("Diagnosis", axis=1)
@@ -1036,7 +1036,7 @@ def generate_combined_evaluation_report(df_cleaned, test_mode=False, fitted_mode
                 row_offset += 25
 
     # ── Sheet: Optimized_CM ────────────────────────────────
-    opt_cm_path = "synthetic_medical_ai/data/reports/plots/confusion_matrix.png"
+    opt_cm_path = "data/reports/plots/confusion_matrix.png"
     if os.path.exists(opt_cm_path):
         ws = wb.create_sheet("Optimized_CM")
         ws.cell(1, 1, "Optimized Clinical Confusion Matrix (Calibrated Stacking)").font = TITLE_FONT
@@ -1044,10 +1044,10 @@ def generate_combined_evaluation_report(df_cleaned, test_mode=False, fitted_mode
         
     # Save Final_Evaluation_Report.xlsx
     try:
-        wb.save("synthetic_medical_ai/data/reports/Final_Evaluation_Report.xlsx")
+        wb.save("data/reports/Final_Evaluation_Report.xlsx")
         logger.info("Successfully saved Final_Evaluation_Report.xlsx!")
     except PermissionError:
-        alt_path = "synthetic_medical_ai/data/reports/Final_Evaluation_Report_new.xlsx"
+        alt_path = "data/reports/Final_Evaluation_Report_new.xlsx"
         logger.warning(f"Permission denied to write Final_Evaluation_Report.xlsx (locked by another process). Saving to {alt_path} instead.")
         wb.save(alt_path)
     

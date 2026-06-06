@@ -1,91 +1,133 @@
-# Local Demo Guide: Running Lung Cancer Predictor
+# 🫁 Lung Cancer Prediction — Local Demo Guide
 
-This guide provides step-by-step instructions on how to quickly set up and run the Lung Cancer Predictor project locally on your college PC for your demo today.
-
-## Prerequisites
-- A Windows PC (your college PC)
-- **Python 3.10** (or similar Python 3 version) installed
-- **Git** installed (if you are cloning from GitHub)
-- Internet connection to download packages
+A quick, step-by-step guide to set up and run the **Lung Cancer Prediction** web application on any Windows PC for a college demo.
 
 ---
 
-## Step 1: Get the Code onto the College PC
+## 📋 Prerequisites
 
-You have two options to get the code onto the college PC:
-
-**Option A (Using a USB Drive):**
-1. Copy your entire `Lung_Cancer_Prediction` folder to a USB drive.
-2. Plug the USB drive into your college PC and copy the folder to the Desktop.
-
-**Option B (Using GitHub - Recommended):**
-1. Open the Command Prompt or Terminal on the college PC.
-2. Navigate to the Desktop (or wherever you want the project):
-   ```cmd
-   cd Desktop
-   ```
-3. Clone your GitHub repository:
-   ```cmd
-   git clone https://github.com/moditejas2005/Lung-Cancer-Prediction.git
-   ```
-4. Enter the downloaded folder:
-   ```cmd
-   cd Lung-Cancer-Prediction
-   ```
+| Requirement | Details |
+|---|---|
+| **OS** | Windows 10 / 11 |
+| **Python** | 3.10 or newer |
+| **Git** | Installed (for GitHub clone option) |
+| **Internet** | Needed only to install packages |
 
 ---
 
-## Step 2: Set Up the Python Environment
+## Step 1 — Get the Code
 
-To avoid interfering with any existing Python setups on the college PC, it's best to use a virtual environment.
+You have two options:
 
-1. In your Command Prompt (making sure you are inside the `Lung_Cancer_Prediction` folder), create a virtual environment named `venv`:
-   ```cmd
-   python -m venv venv
-   ```
+**Option A — USB Drive (No internet needed):**
+1. Copy the entire `Lung_Cancer_Prediction` folder to a USB drive.
+2. Plug it into the college PC and paste the folder onto the Desktop.
 
-2. Activate the virtual environment:
-   ```cmd
-   venv\Scripts\activate
-   ```
-   *(You should see `(venv)` appear at the start of your command prompt line).*
-
----
-
-## Step 3: Install the Dependencies
-
-Now, we will install only the necessary packages to run the web application (skipping the massive training libraries to save time and space).
-
-1. Ensure your virtual environment is activated `(venv)`.
-2. Run the following command to install the lightweight dependencies:
-   ```cmd
-   pip install pandas numpy scikit-learn xgboost catboost scipy joblib flask
-   ```
-   *(This will quickly install Flask, Pandas, Scikit-Learn, XGBoost, and CatBoost).*
+**Option B — Clone from GitHub (Recommended):**
+```cmd
+cd Desktop
+git clone https://github.com/moditejas2005/Lung-Cancer-Prediction.git
+cd Lung-Cancer-Prediction
+```
 
 ---
 
-## Step 4: Run the Application
+## Step 2 — Create a Virtual Environment
 
-Once the installation finishes, you are ready to start the server!
+Open **Command Prompt** inside the `Lung_Cancer_Prediction` folder, then run:
 
-1. Start the Flask application by running:
-   ```cmd
-   python app.py
-   ```
-2. You will see an output that looks like this:
-   ```text
-    * Serving Flask app 'app'
-    * Debug mode: off
-    * Running on http://127.0.0.1:5000
-   ```
-3. Open your web browser (Chrome, Edge, etc.) and go to this exact address:
-   **http://127.0.0.1:5000** or **http://localhost:5000**
+```cmd
+python -m venv venv
+venv\Scripts\activate
+```
+
+You should see `(venv)` appear at the start of your prompt line — this means the virtual environment is active.
 
 ---
 
-## Step 5: Stop the Server (After Demo)
+## Step 3 — Install Dependencies
 
-When your demo is complete, go back to the Command Prompt window where the server is running and press **`Ctrl + C`** on your keyboard to stop it. 
+With `(venv)` active, run:
 
-Good luck with your college demo!
+```cmd
+pip install flask pandas numpy scikit-learn xgboost catboost scipy joblib
+```
+
+> **Note:** This installs only what's needed to run the web app.  
+> The full training pipeline (CTGAN, Optuna, SHAP) is **not required** for the demo — the pre-trained model is already saved in the `models/` folder.
+
+---
+
+## Step 4 — Run the Application
+
+```cmd
+python app.py
+```
+
+You will see output like:
+```
+ * Serving Flask app 'app'
+ * Debug mode: off
+ * Running on http://127.0.0.1:5000
+```
+
+Open your browser and go to:  
+👉 **http://127.0.0.1:5000** or **http://localhost:5000**
+
+---
+
+## Step 5 — Using the Web App
+
+1. Fill in the patient form (Age, Gender, Smoking History, Symptoms, etc.)
+2. Click **"Predict"**
+3. The system will show:
+   - ✅ **Cancer Risk Level** (High / Low)
+   - 📊 **Probability Score** (e.g., 84.3%)
+   - 🔍 **Key Risk Factors** contributing to the result
+
+---
+
+## Step 6 — Stop the Server
+
+When your demo is done, press **`Ctrl + C`** in the Command Prompt to stop the server.
+
+---
+
+## 🗂️ Project Structure (Quick Reference)
+
+```
+Lung_Cancer_Prediction/
+│
+├── app.py                  ← Flask web server (main entry point)
+├── inference.py            ← Model loading & prediction logic
+├── validators.py           ← Clinical input validation rules
+├── pipeline_runner.py      ← Full training pipeline (not needed for demo)
+│
+├── models/                 ← Pre-trained model files (.joblib)
+├── templates/              ← HTML pages for the web interface
+│
+├── augmentation/           ← CTGAN synthetic data generation
+├── preprocessing/          ← Data cleaning & feature engineering
+├── training/               ← Model training, ensembles & calibration
+├── validation/             ← Statistical & medical data validation
+├── explainability/         ← SHAP explainability analysis
+│
+├── data/                   ← Generated datasets & evaluation reports
+└── logs/                   ← Pipeline and application log files
+```
+
+---
+
+## ⚠️ Common Issues & Fixes
+
+| Problem | Fix |
+|---|---|
+| `ModuleNotFoundError: flask` | Run `pip install flask` with `(venv)` active |
+| `ModuleNotFoundError: xgboost` | Run `pip install xgboost` |
+| `Port 5000 already in use` | Kill existing process or use `python app.py --port 5001` |
+| Browser shows blank page | Wait 3–5 seconds and refresh; Flask may still be starting |
+| `Model file not found` | Ensure the `models/` folder is present with `.joblib` files |
+
+---
+
+Good luck with your demo! 🎓
