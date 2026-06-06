@@ -62,17 +62,17 @@ git clone https://github.com/moditejas2005/Lung-Cancer-Prediction.git
    ```bash
    cd Lung-Cancer-Prediction
    ```
-2. Create a virtual environment using Python 3.10:
+2. Create a virtual environment using Python 3.10 (WITH system packages to save space):
    ```bash
-   mkvirtualenv --python=/usr/bin/python3.10 myenv
+   mkvirtualenv --python=/usr/bin/python3.10 --system-site-packages myenv
    ```
 3. **IMPORTANT - Clear your cache first** to free up space (to avoid the Disk Quota error):
    ```bash
    rm -rf ~/.cache/pip
    ```
-4. Install only the lightweight deployment dependencies (no heavy training packages like PyTorch):
+4. Install only the specific missing deployment dependencies (we skip pandas/numpy/scikit-learn because PythonAnywhere already has them pre-installed for free!):
    ```bash
-   pip install --no-cache-dir -r requirements_deploy.txt
+   pip install --no-cache-dir xgboost catboost
    ```
 
 ### Step 5: Set Up the Web App
